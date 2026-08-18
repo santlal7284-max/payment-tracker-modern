@@ -29,6 +29,55 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+// Smart SMS / Bill Text Parser
+function parseSMS() {
+  const text = document.getElementById('smsInput').value;
+  if (!text) {
+    alert("कृपया पहले SMS पेस्ट करें!");
+    return;
+  }
+
+  // 1. Extract Last 4 Digits
+  const cardDigitsMatch = text.match(/(?:ending|card|no\.|x+)\s*(\d{4})/i) || text.match(/\b\d{4}\b/);
+  if (cardDigitsMatch) {
+    document.getElementById('cardLastDigits').value = cardDigitsMatch[1] || cardDigitsMatch[0];
+  }
+
+  // 2. Extract Minimum Due
+  const minDueMatch = text.match(/(?:min|minimum)\s*(?:due|amount|pay)?\s*(?:rs\.?|inr)?\s*([\d,]+)/i);
+  if (minDueMatch) {
+    document.getElementById('minDue').value = minDueMatch[1].replace(/,/g, '');
+  }
+
+  // 3. Extract Full/Total Due
+  const fullDueMatch = text.match(/(?:total|full)\s*(?:due|amount)?\s*(?:rs\.?|inr)?\s*([\d,]+)/i);
+  if (fullDueMatch) {
+    document.getElementById('fullDue').value = fullDueMatch[1].replace(/,/g, '');
+  }
+
+  // 4. Extract Due Date
+  const dateMatch = text.match(/\b(\d{1,2})[-/ ]([a-zA-Z]{3}|\d{1,2})[-/ ](\d{2,4})\b/);
+  if (dateMatch) {
+    let day = dateMatch[1].padStart(2, '0');
+    let month = dateMatch[2];
+    let year = dateMatch[3];
+    
+    if (year.length === 2) year = '20' + year;
+
+    const monthNames = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+    if (isNaN(month)) {
+      const monthIdx = monthNames.findIndex(m => m === month.toLowerCase().substring(0, 3));
+      if (monthIdx !== -1) month = String(monthIdx + 1).padStart(2, '0');
+    } else {
+      month = month.padStart(2, '0');
+    }
+
+    document.getElementById('cardDueDate').value = `${year}-${month}-${day}`;
+  }
+
+  alert("✅ डेटा ऑटो-फ़िल हो गया है! कृपया जाँच करके 'Card Name' भरें और 'Add Card' पर क्लिक करें।");
+}
+
 // Request Push Notification Permission
 function requestNotificationPermission() {
   if (!("Notification" in window)) {
@@ -72,7 +121,6 @@ function checkDueDatesAndNotify() {
       if (item.status !== 'Paid' && item.dueDate) {
         const diffDays = Math.ceil((new Date(item.dueDate) - new Date(today)) / (1000 * 60 * 60 * 24));
 
-        // Trigger Alert if due today or in the next 2 days
         if (diffDays <= 2 && diffDays >= 0) {
           const titleText = `⏰ Payment Due Alert!`;
           const bodyText = `${item.name || item.type || categoryName} का ₹${item.fullDue || item.amount} बकाया है (Due: ${item.dueDate})`;
@@ -106,6 +154,7 @@ document.getElementById('creditCardForm')?.addEventListener('submit', (e) => {
   });
   saveData();
   e.target.reset();
+  document.getElementById('smsInput').value = '';
 });
 
 document.getElementById('sipForm')?.addEventListener('submit', (e) => {

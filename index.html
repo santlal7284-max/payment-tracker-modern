@@ -55,6 +55,14 @@
       <!-- TAB 1: Credit Cards -->
       <section id="creditCardsTab" class="tab-content active">
         <h2>Add / Manage Credit Card</h2>
+        
+        <!-- SMS Auto-Fill Parser Box -->
+        <div class="sms-parser-box" style="background: #eef2ff; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px dashed #4f46e5;">
+          <h3 style="margin-top:0; font-size: 1rem; color: #3730a3;">📲 Auto-fill from Bank SMS</h3>
+          <textarea id="smsInput" placeholder="बैंक का SMS या स्टेटमेंट मैसेज यहाँ पेस्ट करें..." rows="3" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1; font-family: inherit; margin-bottom: 8px; box-sizing: border-box;"></textarea>
+          <button type="button" onclick="parseSMS()" style="background-color: var(--primary); color: white;">⚡ Auto-Fill Form</button>
+        </div>
+
         <form id="creditCardForm" class="form-grid">
           <input type="text" id="cardName" placeholder="Card Name (e.g. HDFC Millennia)" required>
           <input type="text" id="cardLastDigits" placeholder="Last 4 Digits (e.g. 1234)" maxlength="4" pattern="\d{4}" required>
