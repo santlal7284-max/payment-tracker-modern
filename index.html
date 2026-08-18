@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Tracker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <h1>💳 My Finance Dashboard</h1>
+    </header>
+    <main>
+      <form id="paymentForm">
+        <select id="category">
+          <option>School Fees</option>
+          <option>Credit Card</option>
+          <option>SIP Payment</option>
+        </select>
+        <input type="number" id="amount" placeholder="Amount ₹" required>
+        <input type="date" id="dueDate" required>
+        <button type="submit">➕ Add</button>
+      </form>
+
+      <section class="card">
+        <h2>Payments</h2>
+        <table id="paymentTable">
+          <tr>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Due Date</th>
+            <th>Status</th>
+          </tr>
+        </table>
+      </section>
+    </main>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

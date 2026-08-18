@@ -1,0 +1,43 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+}
+.app-container {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+}
+header h1 {
+  text-align: center;
+  font-size: 28px;
+}
+form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+form input, form select, form button {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+}
+form button {
+  background: #ff6b6b;
+  color: #fff;
+  cursor: pointer;
+}
+.card {
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 15px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
