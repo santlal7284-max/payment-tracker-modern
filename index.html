@@ -1,40 +1,224 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
   <meta charset="UTF-8">
-  <title>Payment Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Finance & Bill Tracker</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="app-container">
+    
+    <!-- Top Header -->
     <header>
-      <h1>💳 My Finance Dashboard</h1>
+      <h1>💳 Smart Finance & Bill Tracker</h1>
+      <div class="header-actions">
+        <button id="enableNotificationsBtn" class="notif-btn">🔔 Enable Browser Notifications</button>
+        <button onclick="exportData()" class="btn-secondary">📥 Export Backup</button>
+        <button onclick="document.getElementById('importFile').click()" class="btn-secondary">📤 Import Backup</button>
+        <input type="file" id="importFile" style="display:none" onchange="importData(event)">
+      </div>
     </header>
-    <main>
-      <form id="paymentForm">
-        <select id="category">
-          <option>School Fees</option>
-          <option>Credit Card</option>
-          <option>SIP Payment</option>
-        </select>
-        <input type="number" id="amount" placeholder="Amount ₹" required>
-        <input type="date" id="dueDate" required>
-        <button type="submit">➕ Add</button>
-      </form>
 
-      <section class="card">
-        <h2>Payments</h2>
-        <table id="paymentTable">
-          <tr>
-            <th>Category</th>
-            <th>Amount</th>
-            <th>Due Date</th>
-            <th>Status</th>
-          </tr>
-        </table>
+    <!-- Dashboard Summary Cards -->
+    <section class="dashboard-summary">
+      <div class="summary-card min-due">
+        <h3>Total Min Due</h3>
+        <p id="totalMinDue">₹0</p>
+      </div>
+      <div class="summary-card full-due">
+        <h3>Total Full Due</h3>
+        <p id="totalFullDue">₹0</p>
+      </div>
+      <div class="summary-card sip-total">
+        <h3>Monthly SIPs</h3>
+        <p id="totalSip">₹0</p>
+      </div>
+      <div class="summary-card paid-today">
+        <h3>Paid This Month</h3>
+        <p id="totalPaid">₹0</p>
+      </div>
+    </section>
+
+    <!-- Navigation Tabs -->
+    <nav class="tab-menu">
+      <button class="tab-btn active" onclick="openTab(event, 'creditCardsTab')">💳 Credit Cards</button>
+      <button class="tab-btn" onclick="openTab(event, 'sipTab')">📈 SIP & Investments</button>
+      <button class="tab-btn" onclick="openTab(event, 'schoolFeesTab')">🎒 School Fees</button>
+      <button class="tab-btn" onclick="openTab(event, 'rechargeTab')">📱 Recharge & Bills</button>
+      <button class="tab-btn" onclick="openTab(event, 'paymentHistoryTab')">📊 Payment History Log</button>
+    </nav>
+
+    <main>
+      <!-- TAB 1: Credit Cards -->
+      <section id="creditCardsTab" class="tab-content active">
+        <h2>Add / Manage Credit Card</h2>
+        <form id="creditCardForm" class="form-grid">
+          <input type="text" id="cardName" placeholder="Card Name (e.g. HDFC Millennia)" required>
+          <input type="text" id="cardLastDigits" placeholder="Last 4 Digits (e.g. 1234)" maxlength="4" pattern="\d{4}" required>
+          <input type="number" id="minDue" placeholder="Min Due Amount (₹)" required>
+          <input type="number" id="fullDue" placeholder="Full Due Amount (₹)" required>
+          <input type="date" id="cardDueDate" required>
+          <button type="submit" class="btn-add">➕ Add / Update Card</button>
+        </form>
+
+        <h3>Saved Credit Cards</h3>
+        <div class="table-container">
+          <table id="creditCardTable">
+            <thead>
+              <tr>
+                <th>Card Name</th>
+                <th>Last 4 Digits</th>
+                <th>Min Due</th>
+                <th>Full Due</th>
+                <th>Due Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="creditCardBody">
+              <!-- JS dynamic insertion -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 2: SIP & Investments -->
+      <section id="sipTab" class="tab-content">
+        <h2>Add SIP / Investment Due</h2>
+        <form id="sipForm" class="form-grid">
+          <input type="text" id="sipFundName" placeholder="Fund Name (e.g. Parag Parikh Flexi Cap)" required>
+          <input type="text" id="folioNumber" placeholder="Folio No. / Account (Optional)">
+          <input type="number" id="sipAmount" placeholder="SIP Amount (₹)" required>
+          <input type="date" id="sipDueDate" required>
+          <select id="sipFrequency">
+            <option value="Monthly">Monthly</option>
+            <option value="Quarterly">Quarterly</option>
+            <option value="One-Time">One-Time</option>
+          </select>
+          <button type="submit" class="btn-add">➕ Add SIP</button>
+        </form>
+
+        <h3>Upcoming SIPs</h3>
+        <div class="table-container">
+          <table id="sipTable">
+            <thead>
+              <tr>
+                <th>Fund Name</th>
+                <th>Folio / Acc</th>
+                <th>Amount</th>
+                <th>SIP Date</th>
+                <th>Frequency</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="sipBody">
+              <!-- JS dynamic insertion -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 3: School Fees -->
+      <section id="schoolFeesTab" class="tab-content">
+        <h2>Add School Fees</h2>
+        <form id="schoolFeeForm" class="form-grid">
+          <input type="text" id="childName" placeholder="Child's Name (बच्चे का नाम)" required>
+          <input type="text" id="schoolName" placeholder="School/College Name">
+          <input type="number" id="feeAmount" placeholder="Fee Amount (₹)" required>
+          <input type="date" id="feeDueDate" required>
+          <button type="submit" class="btn-add">➕ Add School Fee</button>
+        </form>
+
+        <h3>School Fee Reminders</h3>
+        <div class="table-container">
+          <table id="schoolFeeTable">
+            <thead>
+              <tr>
+                <th>Child Name</th>
+                <th>School</th>
+                <th>Amount</th>
+                <th>Due Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="schoolFeeBody">
+              <!-- JS dynamic insertion -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 4: Recharge & Bills -->
+      <section id="rechargeTab" class="tab-content">
+        <h2>Add Mobile / Wi-Fi Recharge</h2>
+        <form id="rechargeForm" class="form-grid">
+          <select id="rechargeType" required>
+            <option value="Mobile">Mobile Recharge</option>
+            <option value="Wi-Fi">Wi-Fi Broadband</option>
+            <option value="DTH">DTH / TV</option>
+            <option value="Electricity">Electricity Bill</option>
+          </select>
+          <input type="text" id="serviceProvider" placeholder="Provider (e.g. Airtel, Jio)" required>
+          <input type="number" id="rechargeAmount" placeholder="Amount (₹)" required>
+          <input type="date" id="rechargeDueDate" required>
+          <button type="submit" class="btn-add">➕ Add Recharge Due</button>
+        </form>
+
+        <h3>Recharge & Utility Bills</h3>
+        <div class="table-container">
+          <table id="rechargeTable">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Provider</th>
+                <th>Amount</th>
+                <th>Due Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="rechargeBody">
+              <!-- JS dynamic insertion -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 5: Payment History Log -->
+      <section id="paymentHistoryTab" class="tab-content">
+        <h2>Manual Payment Entry & Record</h2>
+        <form id="manualPaymentForm" class="form-grid">
+          <input type="text" id="paymentTitle" placeholder="Payment For (e.g. HDFC Card Full Paid)" required>
+          <input type="number" id="paidAmount" placeholder="Paid Amount (₹)" required>
+          <input type="date" id="paymentDate" required>
+          <input type="text" id="paymentNotes" placeholder="Payment Reference / Transaction ID">
+          <button type="submit" class="btn-add">✅ Record Payment</button>
+        </form>
+
+        <h3>Payment History Log</h3>
+        <div class="table-container">
+          <table id="historyTable">
+            <thead>
+              <tr>
+                <th>Title / Description</th>
+                <th>Amount Paid</th>
+                <th>Date Paid</th>
+                <th>Notes</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="historyBody">
+              <!-- JS dynamic insertion -->
+            </tbody>
+          </table>
+        </div>
       </section>
     </main>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>

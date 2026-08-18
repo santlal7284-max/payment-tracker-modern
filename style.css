@@ -1,43 +1,117 @@
-body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: #fff;
+:root {
+  --primary: #4f46e5;
+  --bg-color: #f8fafc;
+  --card-bg: #ffffff;
+  --text-color: #1e293b;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --success: #10b981;
 }
-.app-container {
-  max-width: 600px;
-  margin: auto;
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  margin: 0;
   padding: 20px;
 }
-header h1 {
-  text-align: center;
-  font-size: 28px;
+
+.app-container {
+  max-width: 1100px;
+  margin: 0 auto;
 }
-form {
+
+header {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 20px;
 }
-form input, form select, form button {
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
+
+.header-actions {
+  display: flex;
+  gap: 8px;
 }
-form button {
-  background: #ff6b6b;
-  color: #fff;
+
+button {
   cursor: pointer;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  transition: 0.2s ease;
 }
-.card {
-  background: rgba(255,255,255,0.1);
-  border-radius: 12px;
+
+.notif-btn { background-color: var(--primary); color: white; }
+.btn-secondary { background-color: #e2e8f0; color: var(--text-color); }
+.btn-add { background-color: var(--success); color: white; width: 100%; grid-column: 1 / -1; }
+
+.dashboard-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.summary-card {
+  background: var(--card-bg);
   padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  border-left: 5px solid var(--primary);
 }
-table {
-  width: 100%;
-  border-collapse: collapse;
+.summary-card.min-due { border-color: var(--warning); }
+.summary-card.full-due { border-color: var(--danger); }
+.summary-card.sip-total { border-color: var(--primary); }
+.summary-card.paid-today { border-color: var(--success); }
+
+.summary-card h3 { margin: 0; font-size: 0.9rem; color: #64748b; }
+.summary-card p { margin: 5px 0 0 0; font-size: 1.4rem; font-weight: bold; }
+
+.tab-menu {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin-bottom: 15px;
 }
-th, td {
+
+.tab-btn {
+  background: #e2e8f0;
+  color: var(--text-color);
+  padding: 10px 16px;
+}
+.tab-btn.active {
+  background: var(--primary);
+  color: white;
+}
+
+.tab-content { display: none; background: var(--card-bg); padding: 20px; border-radius: 8px; }
+.tab-content.active { display: block; }
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+form input, form select {
   padding: 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
 }
+
+.table-container { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+th { background-color: #f1f5f9; }
+
+/* Status Color Coding */
+tr.status-overdue { background-color: #fee2e2; }
+tr.status-upcoming { background-color: #fef3c7; }
+tr.status-paid { background-color: #d1fae5; }
+
+.btn-action-paid { background-color: var(--success); color: white; padding: 4px 8px; font-size: 0.8rem; }
+.btn-action-delete { background-color: var(--danger); color: white; padding: 4px 8px; font-size: 0.8rem; }
